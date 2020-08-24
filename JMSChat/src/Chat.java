@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSConsumer;
@@ -16,6 +17,7 @@ public class Chat implements Runnable {
 	private List<String> chat;
 	private static ConnectionFactory connectionFactory = null;
 	private static Topic defaultTopic = null;
+
 
 	public Chat() {
 		chat = new ArrayList<>();
@@ -46,7 +48,7 @@ public class Chat implements Runnable {
 	@Override
 	public void run() {
 		JMSContext jmsContext = connectionFactory.createContext();
-		jmsContext.setClientID("exampleApp");
+		jmsContext.setClientID("exampleApp4" + Math.random());
 		JMSConsumer consumer = jmsContext.createDurableConsumer(defaultTopic, "Test");
 		Message msg;
 
@@ -65,13 +67,27 @@ public class Chat implements Runnable {
 
 		}
 	}
+	
+	
+	public String toString() {
+		String string = "";
+		for (String line: chat) {
+			string += line + "\n";
+		}
+		
+		return string;
+	}
 
 	public static void main(String[] args) throws InterruptedException {
 		Chat chat = new Chat();
 		chat.sendMessage("Hello");
 		Thread thread = new Thread(chat);
 		thread.start();
+		chat.sendMessage("Hello agin");
+		chat.sendMessage("Hello again again");
 		thread.join();
+		
+		
 
 	}
 
