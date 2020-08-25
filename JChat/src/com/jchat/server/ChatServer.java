@@ -24,7 +24,7 @@ public class ChatServer {
 	}
 
 	public void acceptConnections() {
-		System.out.println("Waiting for connections...");
+		System.out.println("Waiting for connections on ...: " + connectionListener);
 		while (true) {
 			Socket s = null;
 
