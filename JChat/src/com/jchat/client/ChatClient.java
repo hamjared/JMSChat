@@ -14,7 +14,7 @@ public class ChatClient implements Runnable{
 	
 	public ChatClient() {
 		try {
-			serverConnection = new Socket("127.0.0.1", 2603);
+			serverConnection = new Socket("104.211.35.28", 2603);
 			System.out.println("Connected to server: " + serverConnection);
 		} catch (IOException e) {
 			System.out.println("Unable to connect to server");
