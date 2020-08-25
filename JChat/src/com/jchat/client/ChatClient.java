@@ -6,8 +6,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import com.jchat.Message;
+import com.jchat.server.ChatData;
 
-public class ChatClient {
+public class ChatClient implements Runnable{
 	
 	Socket serverConnection;
 	
@@ -30,6 +31,51 @@ public class ChatClient {
 		} catch (IOException e) {
 			System.out.println("Could not send message");
 			e.printStackTrace();
+		}
+		
+	}
+	
+	public Message receiveIncomingMessage() throws IOException {
+		ObjectInputStream inStream = new ObjectInputStream(serverConnection.getInputStream());
+		Object readObject = null;
+		try {
+			readObject = inStream.readObject();
+			
+		} catch (ClassNotFoundException e) {
+
+		} catch (IOException e) {
+
+		} 
+		
+		if (readObject != null && readObject instanceof Message) {
+			Message msg = (Message) readObject;
+			return msg;
+			
+		}
+		
+		return null;
+			
+		
+	}
+
+	@Override
+	public void run() {
+		while (true) {
+			try {
+				this.receiveIncomingMessage();
+			} catch (IOException e) {
+				
+			}
+		}
+		
+		
+	}
+
+	public void closeConnection() {
+		try {
+			this.serverConnection.close();
+		} catch (IOException e) {
+			System.out.println("Error closing server connection");
 		}
 		
 	}

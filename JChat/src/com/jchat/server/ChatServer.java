@@ -31,6 +31,8 @@ public class ChatServer {
 			try {
 				s = connectionListener.accept();
 				System.out.println("Connection accepeted: " + s);
+				ClientHandler handler = new ClientHandler(s);
+				new Thread(handler).start();
 			} catch (IOException e) {
 				try {
 					s.close();

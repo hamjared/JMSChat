@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name = "JChat" default = "info">
+	
+
+	
+	<target name="info">
+		<echo> JChat </echo>
+	</target>
+	
+	<target name="run server" depends="build server">
+		<java jar="build/jar/JChatServer.jar" fork="true"/>
+	</target>
+	
+	<target name="build server" depends="compile">
+			<mkdir dir="build/jar"/>
+			<jar destfile="build/jar/JChatServer.jar" basedir="build/classes">
+			            <manifest>
+			                <attribute name="Main-Class" value="com.jchat.server.Main"/>
+			            </manifest>
+			</jar>
+			
+	</target>
+	
+		<target name="run client" depends="build client">
+		<java jar="build/jar/JChatClient.jar" fork="true"/>
+	</target>
+	
+	<target name="build client" depends="compile">
+			<mkdir dir="build/jar"/>
+			<jar destfile="build/jar/JChatClient.jar" basedir="build/classes">
+			            <manifest>
+			                <attribute name="Main-Class" value="com.jchat.client.Main"/>
+			            </manifest>
+			</jar>
+			
+	</target>
+	
+	<target name="compile" depends="clean">
+	        <mkdir dir="build/classes"/>
+			<javac srcdir="src/" 
+						   destdir="build/classes"
+						   includeantruntime="false"
+						   source="1.8"
+						   target="1.8"
+						   fork="yes"
+						   compiler="javac1.8"/>
+	</target>
+	
+	<target name="clean">
+	        <delete dir="build"/>
+	</target>
+	
+
+	
+</project>

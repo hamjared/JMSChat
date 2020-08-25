@@ -1,12 +1,17 @@
-package com.jchat;
+package com.jchat.client;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.jchat.Message;
+
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import javax.swing.JTextField;
@@ -17,7 +22,9 @@ public class GUI extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	JTextPane textPane;
-	public Chat chat;
+	List<Message> chat;
+	ChatClient chatClient;
+
 
 	/**
 	 * Launch the application.
@@ -29,8 +36,7 @@ public class GUI extends JFrame {
 			public void run() {
 				try {
 					GUI frame = new GUI();
-					Thread thread = new Thread(frame.chat);
-					thread.start();
+
 					frame.setVisible(true);
 //					thread.join();
 				} catch (Exception e) {
@@ -46,8 +52,9 @@ public class GUI extends JFrame {
 	 * Create the frame.
 	 */
 	public GUI() {
-		chat = new Chat();
-		
+
+		chat = new ArrayList<>();
+		chatClient = new ChatClient();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -71,7 +78,7 @@ public class GUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				sendMessage();
-				updateTextField();
+
 				
 			}
 			
@@ -82,12 +89,12 @@ public class GUI extends JFrame {
 	}
 
 	private void updateTextField() {
-		textPane.setText(chat.toString());
+		
 		
 	}
 	
 	private void sendMessage() {
-		chat.sendMessage(textField.getText());
+		chatClient.sendMessage(textField.getText());
 	}
 	
 	private void updatePane() {
@@ -97,7 +104,10 @@ public class GUI extends JFrame {
 			protected Object doInBackground() throws Exception {
 				// TODO Auto-generated method stub
 				while(true) {
-					textPane.setText(chat.toString());
+					Message msg = chatClient.receiveIncomingMessage();
+					if(msg!= null);
+					chat.add(msg);
+					textPane.setText(createTextPaneText());
 					Thread.sleep(150);
 				}
 			}
@@ -105,6 +115,15 @@ public class GUI extends JFrame {
 		};
 		
 		worker.execute();
+	}
+
+	protected String createTextPaneText() {
+		String s = "";
+		for (Message m : chat) {
+			s += m.toString() + "\n";
+		}
+		
+		return s;
 	}
 	
 
